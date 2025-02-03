@@ -1,19 +1,18 @@
-import { doc, setDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
+import { doc, setDoc} from 'firebase/firestore';
+import { db } from './FirebaseAdmin.js';
 
 
 
-
-
-
-export const uploadFiletoFirebase = async (url, sender, date, id, db, chatId) => {
+export const uploadFiletoFirebase = async (url, sender, date, id, chatId) => {
     try {
-        const imageDocRef = doc(db, "messages", chatId, "images");
-        await setDoc(imageDocRef, {       
+        const imagesCollectionRef = db.collection('messages').doc(chatId).collection('images');
+        
+        await imagesCollectionRef.add({       
             date: date,
             id: id,
             image_url: url,
             senderId: sender,
-        }, { merge: true });
+          }, { merge: true });
               
         console.log('Image metadata successfully added to the images subcollection!');
     } catch (error) {
