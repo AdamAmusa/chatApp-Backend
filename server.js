@@ -1,4 +1,5 @@
-import { uploadFile } from './FileService';
+import { uploadFile } from './FileService.js';
+import { uploadFiletoFirebase } from './MessageService.js';
 import express from 'express';
 import multer from 'multer';
 
@@ -13,11 +14,13 @@ app.get('/api', (req, res) => {
 
 app.post('/api/upload', upload.single('file'), async (req, res) => {
   try {
-    const result = await uploadFile(req.file);
-    res.send(result);
+    const resultMetadata = await uploadFile(req.file);
+    const { senderId, date, id, db, chatId } = req.body;
+    uploadFiletoFirebase(resultMetadata.url, senderId, date, id, db, chatId);
+    res.send(resultMetadata);
   } catch (error) {
     console.error(error);
-    res.status(500).send('File upload failed');
+    res.status(500).json({ error: 'File upload failed' });
   }
 });
 
