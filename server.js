@@ -1,6 +1,5 @@
 import { uploadFile } from './FileService.js';
 import { uploadFiletoFirebase } from './MessageService.js';
-import { db } from './FirebaseAdmin.js';
 import express from 'express';
 import multer from 'multer';
 
@@ -19,8 +18,8 @@ app.get('/api', (req, res) => {
 app.post('/api/upload', upload.single('file'), async (req, res) => {
   try {
     const resultMetadata = await uploadFile(req.file);
-    const { senderId, date, id, chatId } = req.body;
-    uploadFiletoFirebase(resultMetadata.url, senderId, date, id, chatId);
+    const { senderId, id, chatId } = req.body;
+    uploadFiletoFirebase(resultMetadata.url, senderId, id, chatId);
     res.send(resultMetadata);
   } catch (error) {
     console.error(error);
@@ -28,5 +27,5 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
   }
 });
 
-
+//
 app.listen(port, () => { console.log("Server is running on http://localhost:" + port) });

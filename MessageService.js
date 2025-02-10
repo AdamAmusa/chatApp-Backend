@@ -1,14 +1,16 @@
 import { db } from './FirebaseAdmin.js';
 import admin from 'firebase-admin';
 
+const { Timestamp } = admin.firestore;
 
-export const uploadFiletoFirebase = async (url, sender, date, id, chatId) => {
+
+export const uploadFiletoFirebase = async (url, sender, id, chatId) => {
     try {
         const imagesCollectionRef = db.collection('messages').doc(chatId);
         
         await imagesCollectionRef.update({
             images: admin.firestore.FieldValue.arrayUnion({
-                date: date,
+                date: Timestamp.now(),
                 id: id,
                 image_url: url,
                 senderId: sender,
