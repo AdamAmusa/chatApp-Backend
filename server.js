@@ -12,11 +12,11 @@ import { verifyToken } from './FirebaseAdmin.js';
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
-const port = 5000;
+const port = process.env.PORT || 5000; 
 
-app.use(express.json()); // Parse JSON body
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
-app.use(express.raw({ type: 'audio/webm', limit: '10mb' })); // Handle raw audio data
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
+app.use(express.raw({ type: 'audio/webm', limit: '10mb' }));
 
 
 app.get('/api', (req, res) => {
@@ -56,4 +56,5 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 connectToDeepgram(wss);
 
-server.listen(port, () => { console.log("Server is running on http://localhost:" + port) });
+server.listen(port, '0.0.0.0',
+                  () => { console.log("Server is running on http://localhost:" + port) }); 
