@@ -83,9 +83,16 @@ wss.on("connection", (ws) => {
   
     ws.on("close", () => {
       console.log("socket: client disconnected");
-      deepgram.finish();
-      deepgram.removeAllListeners();
-      deepgram = null;
+      if (deepgram) {
+        console.log("deepgram: disconnecting");
+        deepgram.finish(); // Properly close the Deepgram connection
+        deepgram.removeAllListeners(); // Remove all listeners to avoid memory leaks
+        deepgram = null;
+    }
+    if (keepAlive) {
+        clearInterval(keepAlive); // Clear the keepAlive interval
+        keepAlive = null;
+    }
     });
   });
 }
