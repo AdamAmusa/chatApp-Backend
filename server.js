@@ -4,7 +4,7 @@ import { uploadImagetoProfile } from './MessageService.js';
 import { connectToDeepgram} from './transcription.js';
 import { WebSocketServer } from 'ws';
 import http from 'http';
-
+import cors from 'cors';
 import express from 'express';
 import multer from 'multer';
 import { verifyToken } from './FirebaseAdmin.js';
@@ -17,7 +17,13 @@ const port = process.env.PORT || 5000;
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.raw({ type: 'audio/webm', limit: '10mb' }));
-
+app.use(cors({
+  origin: [
+    'https://chat-e48d2.web.app',
+    'https://chat-e48d2.firebaseapp.com'
+  ],
+  credentials: true
+}));
 
 app.get('/api', (req, res) => {
   res.send('Hello World');
