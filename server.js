@@ -54,6 +54,14 @@ app.post('/api/upload-profile', verifyToken, upload.single('file'), async (req, 
 //
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
+
+server.on('upgrade', (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit('connection', ws, request);
+  });
+});
+
+
 connectToDeepgram(wss);
 
 server.listen(port, '0.0.0.0',
